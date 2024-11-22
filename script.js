@@ -30,6 +30,7 @@ imageInput.addEventListener('change', (event) => {
 
                 // Extract image data for processing
                 image = ctx.getImageData(0, 0, newWidth, newHeight);
+                console.log("Image loaded and resized", image);
             };
             img.src = e.target.result;
         };
@@ -39,6 +40,7 @@ imageInput.addEventListener('change', (event) => {
 
 // Perform K-Means clustering
 function kmeansClustering(pixels, k) {
+    console.log("Running K-Means with k =", k);
     const points = [];
     for (let i = 0; i < pixels.data.length; i += 4) {
         points.push([pixels.data[i], pixels.data[i + 1], pixels.data[i + 2]]);
@@ -59,6 +61,7 @@ function kmeansClustering(pixels, k) {
 
 // Perform MeanShift clustering
 function meanshiftClustering(pixels) {
+    console.log("Running MeanShift clustering");
     const points = [];
     for (let i = 0; i < pixels.data.length; i += 4) {
         points.push([pixels.data[i], pixels.data[i + 1], pixels.data[i + 2]]);
@@ -92,6 +95,7 @@ processButton.addEventListener('click', () => {
     kmeansCanvas.height = kmeansResult.height;
     const kmeansCtx = kmeansCanvas.getContext('2d');
     kmeansCtx.putImageData(kmeansResult, 0, 0);
+    console.log("K-Means result displayed on canvas");
 
     // Perform MeanShift clustering
     const meanshiftResult = meanshiftClustering(image);
@@ -99,4 +103,5 @@ processButton.addEventListener('click', () => {
     meanshiftCanvas.height = meanshiftResult.height;
     const meanshiftCtx = meanshiftCanvas.getContext('2d');
     meanshiftCtx.putImageData(meanshiftResult, 0, 0);
+    console.log("MeanShift result displayed on canvas");
 });
