@@ -1,46 +1,107 @@
-body {
-    font-family: Arial, sans-serif;
+/* General styles */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
     color: #333;
-}
-
-.container {
-    max-width: 600px;
-    margin: 50px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-h1, h2 {
     text-align: center;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+h1 {
+    font-size: 2.5rem;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
-button {
-    padding: 10px;
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.upload-container {
+    margin-bottom: 20px;
+}
+
+.file-label {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
     cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
 }
 
-button:hover {
+#image-name {
+    margin-left: 10px;
+    font-size: 16px;
+    color: #555;
+}
+
+.options {
+    margin-bottom: 20px;
+}
+
+.options input[type="number"] {
+    padding: 10px;
+    font-size: 16px;
+    width: 80px;
+    margin-left: 10px;
+}
+
+.options button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 20px;
+}
+
+.options button:hover {
     background-color: #0056b3;
 }
 
-img {
-    max-width: 100%;
-    margin-top: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+.image-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.image-box {
+    width: 30%;
+    min-width: 300px;
+    margin-bottom: 30px;
+}
+
+canvas {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .image-box {
+        width: 45%;
+    }
+}
+
+@media (max-width: 480px) {
+    .image-box {
+        width: 100%;
+    }
+
+    .options {
+        flex-direction: column;
+    }
 }
