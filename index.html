@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image K-Means Clustering</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Image K-Means Clustering</h1>
+        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+            <label for="imageUpload">Upload an image:</label>
+            <input type="file" id="imageUpload" name="image" accept="image/*" required>
+            <button type="submit">Process Image</button>
+        </form>
+        <div id="result">
+            <h2>Original Image:</h2>
+            <img id="originalImage" src="#" alt="Your uploaded image" style="display:none;">
+            <h2>Processed Image:</h2>
+            <img id="processedImage" src="#" alt="Result image" style="display:none;">
+        </div>
+    </div>
+</body>
+</html>
