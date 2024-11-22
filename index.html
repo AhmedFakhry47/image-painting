@@ -4,41 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Clustering: K-Means and Mean Shift</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Image Clustering: K-Means and Mean Shift</h1>
 
-        <!-- File upload and input for K-Means clusters -->
-        <div class="upload-container">
+        <!-- File input and K-means Clusters input -->
+        <div class="file-input">
+            <label for="image-input">Choose File</label>
             <input type="file" id="image-input" accept="image/*">
-            <label for="image-input" class="file-label">Choose File</label>
-            <span id="image-name">No file chosen</span>
-        </div>
-        
-        <div class="options">
-            <label for="kmeans-clusters">K-Means Clusters: </label>
-            <input type="number" id="kmeans-clusters" value="8" min="2" max="50">
-            <button id="process-button">Process Image</button>
         </div>
 
-        <!-- Displaying images -->
-        <div class="image-container">
-            <div class="image-box">
+        <div class="clusters-input">
+            <label for="kmeans-clusters">K-Means Clusters:</label>
+            <input type="number" id="kmeans-clusters" value="4" min="2" max="10">
+        </div>
+
+        <button id="process-button">Process Image</button>
+
+        <div class="images">
+            <div class="image-section">
                 <h2>Original Image</h2>
                 <canvas id="original-image"></canvas>
             </div>
-            <div class="image-box">
+            <div class="image-section">
                 <h2>K-Means Clustering</h2>
                 <canvas id="kmeans-image"></canvas>
             </div>
-            <div class="image-box">
+            <div class="image-section">
                 <h2>Mean Shift Clustering</h2>
                 <canvas id="meanshift-image"></canvas>
             </div>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
