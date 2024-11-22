@@ -4,37 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Clustering: K-Means and Mean Shift</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .image-box {
+            width: 300px;
+            height: 300px;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+        }
+        .image-box img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .form-box {
+            margin-bottom: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Image Clustering: K-Means & Mean Shift</h1>
-        </header>
 
-        <!-- File Upload Section -->
-        <div class="upload-section">
-            <input type="file" id="image-input" accept="image/*">
-            <button id="process-button" class="process-btn">Process Image</button>
-        </div>
+<h1>Image Clustering: K-Means and Mean Shift</h1>
 
-        <!-- Display Image & Results -->
-        <div class="image-container">
-            <div class="image-box">
-                <h2>Original Image</h2>
-                <img id="original-image" class="image" src="" alt="Original Image">
-            </div>
-            <div class="image-box">
-                <h2>K-Means Clustering</h2>
-                <canvas id="kmeans-canvas" class="image"></canvas>
-            </div>
-            <div class="image-box">
-                <h2>Mean Shift Clustering</h2>
-                <canvas id="meanshift-canvas" class="image"></canvas>
-            </div>
-        </div>
+<div class="form-box">
+    <input type="file" id="file-input" accept="image/*">
+    <input type="number" id="k-clusters" value="4" min="2" max="10">
+    <button class="button" id="process-btn">Process Image</button>
+</div>
+
+<div class="container">
+    <div class="image-box">
+        <h3>Original Image</h3>
+        <img id="original-image" src="" alt="Uploaded Image">
     </div>
+    <div class="image-box">
+        <h3>K-Means Clustering</h3>
+        <img id="kmeans-image" src="" alt="K-Means Clustering Result">
+    </div>
+    <div class="image-box">
+        <h3>Mean Shift Clustering</h3>
+        <img id="meanshift-image" src="" alt="Mean Shift Clustering Result">
+    </div>
+</div>
 
-    <script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist"></script>
+
+<script src="script.js"></script>
+
 </body>
 </html>
