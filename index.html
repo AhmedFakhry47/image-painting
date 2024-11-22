@@ -9,35 +9,28 @@
 <body>
     <div class="container">
         <header>
-            <h1>Image Clustering: K-Means and Mean Shift</h1>
+            <h1>Image Clustering: K-Means & Mean Shift</h1>
         </header>
 
+        <!-- File Upload Section -->
         <div class="upload-section">
-            <label for="image-input" class="upload-label">Choose an Image</label>
             <input type="file" id="image-input" accept="image/*">
-            <span id="file-name">No file chosen</span>
-        </div>
-
-        <div class="controls">
-            <div class="clusters-section">
-                <label for="kmeans-clusters">K-Means Clusters:</label>
-                <input type="number" id="kmeans-clusters" value="4" min="2" max="10">
-            </div>
             <button id="process-button" class="process-btn">Process Image</button>
         </div>
 
-        <div class="results">
-            <div class="result-box">
+        <!-- Display Image & Results -->
+        <div class="image-container">
+            <div class="image-box">
                 <h2>Original Image</h2>
                 <img id="original-image" class="image" src="" alt="Original Image">
             </div>
-            <div class="result-box">
+            <div class="image-box">
                 <h2>K-Means Clustering</h2>
-                <img id="kmeans-image" class="image" src="" alt="K-Means Clustering">
+                <canvas id="kmeans-canvas" class="image"></canvas>
             </div>
-            <div class="result-box">
+            <div class="image-box">
                 <h2>Mean Shift Clustering</h2>
-                <img id="meanshift-image" class="image" src="" alt="Mean Shift Clustering">
+                <canvas id="meanshift-canvas" class="image"></canvas>
             </div>
         </div>
     </div>
