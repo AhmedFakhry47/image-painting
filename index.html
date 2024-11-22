@@ -7,35 +7,38 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Image Clustering: K-Means and Mean Shift</h1>
+    <div class="container">
+        <header>
+            <h1>Image Clustering: K-Means and Mean Shift</h1>
+        </header>
 
-    <div class="input-container">
-        <label for="image-input">Choose File</label>
-        <input type="file" id="image-input" accept="image/*">
-        <span id="file-name">No file chosen</span>
-    </div>
-
-    <div class="input-container">
-        <label for="kmeans-clusters">K-Means Clusters:</label>
-        <input type="number" id="kmeans-clusters" value="4" min="2" max="10">
-    </div>
-
-    <button id="process-button">Process Image</button>
-
-    <div class="output-container">
-        <div class="image-section">
-            <h2>Original Image</h2>
-            <img id="original-image" src="" alt="Original Image" class="image-output">
+        <div class="upload-section">
+            <label for="image-input" class="upload-label">Choose an Image</label>
+            <input type="file" id="image-input" accept="image/*">
+            <span id="file-name">No file chosen</span>
         </div>
 
-        <div class="image-section">
-            <h2>K-Means Clustering</h2>
-            <img id="kmeans-image" src="" alt="K-Means Clustering Result" class="image-output">
+        <div class="controls">
+            <div class="clusters-section">
+                <label for="kmeans-clusters">K-Means Clusters:</label>
+                <input type="number" id="kmeans-clusters" value="4" min="2" max="10">
+            </div>
+            <button id="process-button" class="process-btn">Process Image</button>
         </div>
 
-        <div class="image-section">
-            <h2>Mean Shift Clustering</h2>
-            <img id="meanshift-image" src="" alt="Mean Shift Clustering Result" class="image-output">
+        <div class="results">
+            <div class="result-box">
+                <h2>Original Image</h2>
+                <img id="original-image" class="image" src="" alt="Original Image">
+            </div>
+            <div class="result-box">
+                <h2>K-Means Clustering</h2>
+                <img id="kmeans-image" class="image" src="" alt="K-Means Clustering">
+            </div>
+            <div class="result-box">
+                <h2>Mean Shift Clustering</h2>
+                <img id="meanshift-image" class="image" src="" alt="Mean Shift Clustering">
+            </div>
         </div>
     </div>
 
