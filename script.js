@@ -1,75 +1,54 @@
-// Get elements from the DOM
-const imageInput = document.getElementById('image-input');
-const processButton = document.getElementById('process-button');
-const originalImage = document.getElementById('original-image');
-const kmeansCanvas = document.getElementById('kmeans-canvas');
-const meanshiftCanvas = document.getElementById('meanshift-canvas');
+document.getElementById('process-btn').addEventListener('click', processImage);
 
-// Function to load and display the selected image
-function loadImage(file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        originalImage.src = e.target.result;
-        originalImage.onload = () => {
-            // Adjust the canvas size to match the image
-            kmeansCanvas.width = originalImage.width;
-            kmeansCanvas.height = originalImage.height;
-            meanshiftCanvas.width = originalImage.width;
-            meanshiftCanvas.height = originalImage.height;
-        };
-    };
-    reader.readAsDataURL(file);
-}
+function processImage() {
+    const fileInput = document.getElementById('file-input');
+    const kClusters = parseInt(document.getElementById('k-clusters').value);
+    const file = fileInput.files[0];
 
-// Function to apply K-Means clustering (dummy implementation for now)
-function processKMeans() {
-    const ctx = kmeansCanvas.getContext('2d');
-    const image = originalImage;
-    const imageData = ctx.getImageData(0, 0, image.width, image.height);
-    const data = imageData.data;
-
-    // Apply K-Means algorithm (dummy: random color assignment)
-    for (let i = 0; i < data.length; i += 4) {
-        data[i] = Math.random() * 255;     // Red
-        data[i + 1] = Math.random() * 255; // Green
-        data[i + 2] = Math.random() * 255; // Blue
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-}
-
-// Function to apply Mean Shift clustering (dummy implementation for now)
-function processMeanShift() {
-    const ctx = meanshiftCanvas.getContext('2d');
-    const image = originalImage;
-    const imageData = ctx.getImageData(0, 0, image.width, image.height);
-    const data = imageData.data;
-
-    // Apply Mean Shift algorithm (dummy: random color assignment)
-    for (let i = 0; i < data.length; i += 4) {
-        data[i] = Math.random() * 255;     // Red
-        data[i + 1] = Math.random() * 255; // Green
-        data[i + 2] = Math.random() * 255; // Blue
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-}
-
-// Event listener for the image upload
-imageInput.addEventListener('change', function (event) {
-    const file = event.target.files[0];
-    if (file) {
-        loadImage(file);
-    }
-});
-
-// Event listener for the process button
-processButton.addEventListener('click', function () {
-    if (originalImage.src === "") {
-        alert("Please upload an image first.");
+    if (!file) {
+        alert('Please upload an image!');
         return;
     }
 
-    processKMeans();
-    processMeanShift();
-});
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imgElement = new Image();
+        imgElement.onload = function() {
+            document.getElementById('original-image').src = imgElement.src;
+            handleClustering(imgElement, kClusters);
+        }
+        imgElement.src = e.target.result;
+    }
+    reader.readAsDataURL(file);
+}
+
+async function handleClustering(image, kClusters) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = image.width;
+    canvas.height = image.height;
+    ctx.drawImage(image, 0, 0);
+
+    const imageData = ctx.getImageData(0, 0, image.width, image.height);
+    const pixels = imageData.data;
+    
+    // K-Means clustering
+    const kMeansResult = await kMeansClustering(pixels, image.width, image.height, kClusters);
+    document.getElementById('kmeans-image').src = kMeansResult;
+
+    // Mean Shift clustering
+    const meanShiftResult = await meanShiftClustering(pixels, image.width, image.height);
+    document.getElementById('meanshift-image').src = meanShiftResult;
+}
+
+async function kMeansClustering(pixels, width, height, kClusters) {
+    // Placeholder for K-Means implementation.
+    // You need to use a clustering algorithm for K-Means here.
+    return "path_to_kmeans_output_image.png"; // Return the result
+}
+
+async function meanShiftClustering(pixels, width, height) {
+    // Placeholder for Mean Shift implementation.
+    // Implement mean shift clustering here
+    return "path_to_meanshift_output_image.png"; // Return the result
+}
