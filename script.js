@@ -90,11 +90,13 @@ processButton.addEventListener('click', () => {
     const kmeansResult = kmeansClustering(image, k);
     kmeansCanvas.width = kmeansResult.width;
     kmeansCanvas.height = kmeansResult.height;
-    kmeansCanvas.getContext('2d').putImageData(kmeansResult, 0, 0);
+    const kmeansCtx = kmeansCanvas.getContext('2d');
+    kmeansCtx.putImageData(kmeansResult, 0, 0);
 
     // Perform MeanShift clustering
     const meanshiftResult = meanshiftClustering(image);
     meanshiftCanvas.width = meanshiftResult.width;
     meanshiftCanvas.height = meanshiftResult.height;
-    meanshiftCanvas.getContext('2d').putImageData(meanshiftResult, 0, 0);
+    const meanshiftCtx = meanshiftCanvas.getContext('2d');
+    meanshiftCtx.putImageData(meanshiftResult, 0, 0);
 });
