@@ -2,11 +2,13 @@ const imageInput = document.getElementById('imageInput');
 const clustersInput = document.getElementById('clusters');
 const processButton = document.getElementById('processButton');
 const originalCanvas = document.getElementById('originalCanvas');
-const processedCanvas = document.getElementById('processedCanvas');
+const kmeansCanvas = document.getElementById('kmeansCanvas');
+const meanshiftCanvas = document.getElementById('meanshiftCanvas');
 
 let image = null;
+const targetWidth = 255; // Target width for resizing
 
-// Load the image into a canvas
+// Load the image into a canvas and resize it
 imageInput.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -14,11 +16,16 @@ imageInput.addEventListener('change', (event) => {
         reader.onload = (e) => {
             const img = new Image();
             img.onload = () => {
+                const aspectRatio = img.height / img.width;
+                const newWidth = targetWidth;
+                const newHeight = Math.round(newWidth * aspectRatio);
+
+                originalCanvas.width = newWidth;
+                originalCanvas.height = newHeight;
+
                 const ctx = originalCanvas.getContext('2d');
-                originalCanvas.width = img.width;
-                originalCanvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-                image = img;
+                ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                image = ctx.getImageData(0, 0, newWidth, newHeight);
             };
             img.src = e.target.result;
         };
@@ -26,7 +33,7 @@ imageInput.addEventListener('change', (event) => {
     }
 });
 
-// Perform K-Means Clustering
+// Perform clustering
 processButton.addEventListener('click', () => {
     if (!image) {
         alert('Please upload an image first!');
@@ -39,37 +46,22 @@ processButton.addEventListener('click', () => {
         return;
     }
 
-    const ctx = originalCanvas.getContext('2d');
-    const imgData = ctx.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
     const pixels = [];
-    
-    // Extract pixel data
-    for (let i = 0; i < imgData.data.length; i += 4) {
+    for (let i = 0; i < image.data.length; i += 4) {
         pixels.push([
-            imgData.data[i],     // Red
-            imgData.data[i + 1], // Green
-            imgData.data[i + 2]  // Blue
+            image.data[i],     // Red
+            image.data[i + 1], // Green
+            image.data[i + 2]  // Blue
         ]);
     }
 
-    // Run K-Means Clustering
-    const clusteredPixels = kMeans(pixels, clusters);
+    // K-Means clustering
+    const kmeansPixels = kMeans(pixels, clusters);
+    drawClusteredImage(kmeansPixels, image.width, image.height, kmeansCanvas);
 
-    // Recreate the image with clustered colors
-    const newImgData = ctx.createImageData(imgData.width, imgData.height);
-    for (let i = 0; i < clusteredPixels.length; i++) {
-        const [r, g, b] = clusteredPixels[i];
-        newImgData.data[i * 4] = r;
-        newImgData.data[i * 4 + 1] = g;
-        newImgData.data[i * 4 + 2] = b;
-        newImgData.data[i * 4 + 3] = 255; // Alpha channel
-    }
-
-    // Draw the processed image
-    const processedCtx = processedCanvas.getContext('2d');
-    processedCanvas.width = imgData.width;
-    processedCanvas.height = imgData.height;
-    processedCtx.putImageData(newImgData, 0, 0);
+    // Mean Shift clustering
+    const meanshiftPixels = meanShift(pixels);
+    drawClusteredImage(meanshiftPixels, image.width, image.height, meanshiftCanvas);
 });
 
 // K-Means Algorithm
@@ -108,8 +100,42 @@ function kMeans(pixels, k) {
         }
     }
 
-    // Recolor pixels
     return pixels.map((_, i) => centroids[assignments[i]]);
+}
+
+// Mean Shift Clustering
+function meanShift(pixels, bandwidth = 40) {
+    const centroids = [...pixels];
+    const threshold = 1;
+
+    let hasConverged = false;
+
+    while (!hasConverged) {
+        hasConverged = true;
+
+        for (let i = 0; i < centroids.length; i++) {
+            const centroid = centroids[i];
+            const nearbyPoints = pixels.filter(p => euclideanDistance(p, centroid) < bandwidth);
+
+            const newCentroid = nearbyPoints.reduce(
+                (sum, p) => [sum[0] + p[0], sum[1] + p[1], sum[2] + p[2]],
+                [0, 0, 0]
+            ).map(sum => sum / nearbyPoints.length);
+
+            if (euclideanDistance(centroid, newCentroid) > threshold) {
+                centroids[i] = newCentroid;
+                hasConverged = false;
+            }
+        }
+    }
+
+    return pixels.map(pixel =>
+        centroids.reduce((closest, centroid) =>
+            euclideanDistance(pixel, centroid) < euclideanDistance(pixel, closest)
+                ? centroid
+                : closest
+        )
+    );
 }
 
 function initializeCentroids(pixels, k) {
@@ -125,10 +151,3 @@ function initializeCentroids(pixels, k) {
     return centroids;
 }
 
-function euclideanDistance(p1, p2) {
-    return Math.sqrt(
-        Math.pow(p1[0] - p2[0], 2) +
-        Math.pow(p1[1] - p2[1], 2) +
-        Math.pow(p1[2] - p2[2], 2)
-    );
-}
