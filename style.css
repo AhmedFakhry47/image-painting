@@ -1,107 +1,63 @@
-/* General styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-    color: #333;
+    background-color: #f4f4f9;
     text-align: center;
-}
-
-h1 {
-    font-size: 2.5rem;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
-    width: 80%;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
-.upload-container {
-    margin-bottom: 20px;
+h1 {
+    font-size: 32px;
+    color: #333;
 }
 
-.file-label {
-    display: inline-block;
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 16px;
+.file-input,
+.clusters-input {
+    margin: 20px 0;
 }
 
-#image-name {
-    margin-left: 10px;
-    font-size: 16px;
-    color: #555;
-}
-
-.options {
-    margin-bottom: 20px;
-}
-
-.options input[type="number"] {
+input[type="file"],
+input[type="number"] {
     padding: 10px;
     font-size: 16px;
-    width: 80px;
-    margin-left: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
-.options button {
+button {
     padding: 10px 20px;
-    background-color: #007BFF;
+    font-size: 16px;
+    background-color: #007bff;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    margin-left: 20px;
 }
 
-.options button:hover {
+button:hover {
     background-color: #0056b3;
 }
 
-.image-container {
+.images {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-top: 30px;
-    flex-wrap: wrap;
 }
 
-.image-box {
-    width: 30%;
-    min-width: 300px;
-    margin-bottom: 30px;
+.image-section {
+    flex: 1;
+    margin: 0 10px;
+    text-align: center;
 }
 
 canvas {
-    width: 100%;
+    border: 1px solid #ccc;
+    max-width: 100%;
     height: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 768px) {
-    .image-box {
-        width: 45%;
-    }
-}
-
-@media (max-width: 480px) {
-    .image-box {
-        width: 100%;
-    }
-
-    .options {
-        flex-direction: column;
-    }
 }
