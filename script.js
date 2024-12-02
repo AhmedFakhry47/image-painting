@@ -254,6 +254,9 @@ async function processImage() {
             const meanShiftCtx = meanShiftCanvas.getContext('2d');
             meanShiftCtx.putImageData(meanShiftImageData, 0, 0);
             document.getElementById('meanshift-image').src = meanShiftCanvas.toDataURL();
+            console.log("Canvas Width:", canvas.width, "Canvas Height:", canvas.height);
+            console.log("ImageData Dimensions:", kMeansImageData.width, kMeansImageData.height);
+
         };
         imgElement.src = e.target.result;
     };
