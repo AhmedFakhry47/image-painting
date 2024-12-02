@@ -37,9 +37,8 @@ function applyKMeansClustering(img, clusters) {
     canvas.height = img.height;
     ctx.drawImage(img, 0, 0);
 
-    // Simulated K-Means (simplified version)
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const clusteredData = simulateClustering(imageData, clusters); // Simulate clustering
+    const clusteredData = simulateClustering(imageData, clusters); // K-Means simulation
     ctx.putImageData(clusteredData, 0, 0);
 }
 
@@ -50,19 +49,74 @@ function applyMeanShiftClustering(img) {
     canvas.height = img.height;
     ctx.drawImage(img, 0, 0);
 
-    // Simulated Mean Shift Clustering (placeholder)
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const clusteredData = simulateClustering(imageData, 5); // Simulate Mean Shift with 5 clusters
+    const clusteredData = simulateMeanShift(imageData); // Mean Shift simulation
     ctx.putImageData(clusteredData, 0, 0);
 }
 
+// Simulated K-Means Clustering
 function simulateClustering(imageData, clusters) {
-    // Dummy implementation for clustering (Replace with real algorithms)
     const data = imageData.data;
     for (let i = 0; i < data.length; i += 4) {
         const avg = Math.floor((data[i] + data[i + 1] + data[i + 2]) / 3);
         const clusterValue = Math.floor((avg / 255) * clusters) * (255 / clusters);
-        data[i] = data[i + 1] = data[i + 2] = clusterValue; // Grayscale-like clustering
+        data[i] = data[i + 1] = data[i + 2] = clusterValue; // Grayscale clustering
     }
     return imageData;
+}
+
+// Simulated Mean Shift Clustering
+function simulateMeanShift(imageData) {
+    const data = imageData.data;
+    const bandwidth = 50; // Simulated bandwidth for mean shift
+    const width = imageData.width;
+    const height = imageData.height;
+
+    // Create a copy of the image data
+    const outputData = new Uint8ClampedArray(data);
+
+    for (let i = 0; i < data.length; i += 4) {
+        // Apply a simple mean shift by averaging the neighborhood
+        const x = (i / 4) % width;
+        const y = Math.floor(i / 4 / width);
+
+        const neighbors = getNeighbors(x, y, width, height, bandwidth, data);
+        const meanColor = calculateMeanColor(neighbors);
+
+        outputData[i] = meanColor[0];     // Red
+        outputData[i + 1] = meanColor[1]; // Green
+        outputData[i + 2] = meanColor[2]; // Blue
+    }
+
+    return new ImageData(outputData, width, height);
+}
+
+// Helper Function: Get neighbors for a given pixel
+function getNeighbors(x, y, width, height, bandwidth, data) {
+    const neighbors = [];
+    for (let dx = -bandwidth; dx <= bandwidth; dx++) {
+        for (let dy = -bandwidth; dy <= bandwidth; dy++) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                const index = (ny * width + nx) * 4;
+                neighbors.push([data[index], data[index + 1], data[index + 2]]);
+            }
+        }
+    }
+    return neighbors;
+}
+
+// Helper Function: Calculate mean color from neighbors
+function calculateMeanColor(neighbors) {
+    const meanColor = [0, 0, 0];
+    neighbors.forEach(([r, g, b]) => {
+        meanColor[0] += r;
+        meanColor[1] += g;
+        meanColor[2] += b;
+    });
+    meanColor[0] /= neighbors.length;
+    meanColor[1] /= neighbors.length;
+    meanColor[2] /= neighbors.length;
+    return meanColor;
 }
