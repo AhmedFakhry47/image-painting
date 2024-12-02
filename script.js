@@ -124,59 +124,61 @@ class ClusteringUtils {
         return centroids;
     }
 
-    // Mean Shift Clustering implementation
-    // static meanShiftClustering(pixels, bandwidth = null) {
-    //     // If bandwidth not provided, estimate it
-    //     if (bandwidth === null) {
-    //         const distances = [];
-    //         for (let i = 0; i < pixels.length; i++) {
-    //             for (let j = i + 1; j < pixels.length; j++) {
-    //                 distances.push(this.distance(pixels[i], pixels[j]));
-    //             }
-    //         }
-    //         distances.sort((a, b) => a - b);
-    //         bandwidth = distances[Math.floor(distances.length * 0.1)];
-    //     }
-
-    //     const labels = new Array(pixels.length).fill(-1);
-    //     const clusters = [];
-
-    //     pixels.forEach((pixel, index) => {
-    //         if (labels[index] !== -1) return; // Skip if already labeled
-
-    //         let shifted = [...pixel];
-    //         let prevShifted;
-
-    //         do {
-    //             prevShifted = [...shifted];
+    static meanShiftClustering(pixels, bandwidth = null) {
+        // If bandwidth not provided, estimate it
+        if (bandwidth === null) {
+            const distances = [];
+            for (let i = 0; i < pixels.length; i++) {
+                for (let j = i + 1; j < pixels.length; j++) {
+                    distances.push(this.distance(pixels[i], pixels[j]));
+                }
+            }
+            distances.sort((a, b) => a - b);
+            bandwidth = distances[Math.floor(distances.length * 0.1)];
+        }
+    
+        const labels = new Array(pixels.length).fill(-1);  // Initialize labels as -1 (unlabeled)
+        const clusters = [];  // To store centroids of clusters
+    
+        pixels.forEach((pixel, index) => {
+            if (labels[index] !== -1) return; // Skip if already labeled
+    
+            let shifted = [...pixel];  // Start with the pixel itself as the initial shift
+            let prevShifted;
+    
+            do {
+                prevShifted = [...shifted];
                 
-    //             // Calculate mean shift
-    //             const nearPoints = pixels.filter(p => 
-    //                 this.distance(p, shifted) <= bandwidth
-    //             );
-
-    //             shifted = nearPoints.reduce((sum, point) => 
-    //                 sum.map((val, i) => val + point[i]), 
-    //                 new Array(pixel.length).fill(0)
-    //             ).map(val => val / nearPoints.length);
-    //         } while (this.distance(shifted, prevShifted) > 0.1);
-
-    //         // Find or create cluster
-    //         let clusterIndex = clusters.findIndex(cluster => 
-    //             this.distance(cluster, shifted) <= bandwidth
-    //         );
-
-    //         if (clusterIndex === -1) {
-    //             clusterIndex = clusters.length;
-    //             clusters.push(shifted);
-    //         }
-
-    //         labels[index] = clusterIndex;
-    //     });
-
-    //     return { labels, centroids: clusters };
-    // }
-
+                // Calculate mean shift
+                const nearPoints = pixels.filter(p => 
+                    this.distance(p, shifted) <= bandwidth
+                );
+    
+                if (nearPoints.length === 0) return;  // No nearby points to shift towards
+    
+                // Calculate the new mean (centroid)
+                shifted = nearPoints.reduce((sum, point) => 
+                    sum.map((val, i) => val + point[i]), 
+                    new Array(pixel.length).fill(0)
+                ).map(val => val / nearPoints.length);
+    
+            } while (this.distance(shifted, prevShifted) > 0.1); // Continue shifting until convergence
+    
+            // Find or create cluster based on the shifted centroid
+            let clusterIndex = clusters.findIndex(cluster => 
+                this.distance(cluster, shifted) <= bandwidth
+            );
+    
+            if (clusterIndex === -1) {
+                clusterIndex = clusters.length;
+                clusters.push(shifted);  // Add new cluster centroid
+            }
+    
+            labels[index] = clusterIndex;  // Assign the pixel to the cluster
+        });
+    
+        return { labels, centroids: clusters };
+    }
     // Visualize clustering results
     static visualizeClustering(imageData, labels, centroids) {
         const newImageData = new ImageData(imageData.width, imageData.height);
@@ -232,13 +234,13 @@ async function processImage() {
                 imageData, kMeansLabels, kMeansCentroids
             );
 
-            // // Mean Shift Clustering
-            // const { labels: meanShiftLabels, centroids: meanShiftCentroids } = 
-            //     ClusteringUtils.meanShiftClustering(pixels);
+            // Mean Shift Clustering
+            const { labels: meanShiftLabels, centroids: meanShiftCentroids } = 
+                ClusteringUtils.meanShiftClustering(pixels);
             
-            // const meanShiftImageData = ClusteringUtils.visualizeClustering(
-            //     imageData, meanShiftLabels, meanShiftCentroids
-            // );
+            const meanShiftImageData = ClusteringUtils.visualizeClustering(
+                imageData, meanShiftLabels, meanShiftCentroids
+            );
 
             // Display clustered images
             const kMeansCanvas = document.createElement('canvas');
@@ -248,14 +250,14 @@ async function processImage() {
             kMeansCtx.putImageData(kMeansImageData, 0, 0);
             document.getElementById('kmeans-image').src = kMeansCanvas.toDataURL();
 
-            // const meanShiftCanvas = document.createElement('canvas');
-            // meanShiftCanvas.width = canvas.width;
-            // meanShiftCanvas.height = canvas.height;
-            // const meanShiftCtx = meanShiftCanvas.getContext('2d');
-            // meanShiftCtx.putImageData(meanShiftImageData, 0, 0);
-            // document.getElementById('meanshift-image').src = meanShiftCanvas.toDataURL();
-            // console.log("Canvas Width:", canvas.width, "Canvas Height:", canvas.height);
-            // console.log("ImageData Dimensions:", kMeansImageData.width, kMeansImageData.height);
+            const meanShiftCanvas = document.createElement('canvas');
+            meanShiftCanvas.width = canvas.width;
+            meanShiftCanvas.height = canvas.height;
+            const meanShiftCtx = meanShiftCanvas.getContext('2d');
+            meanShiftCtx.putImageData(meanShiftImageData, 0, 0);
+            document.getElementById('meanshift-image').src = meanShiftCanvas.toDataURL();
+            console.log("Canvas Width:", canvas.width, "Canvas Height:", canvas.height);
+            console.log("ImageData Dimensions:", kMeansImageData.width, kMeansImageData.height);
 
         };
         imgElement.src = e.target.result;
