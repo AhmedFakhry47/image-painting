@@ -125,57 +125,57 @@ class ClusteringUtils {
     }
 
     // Mean Shift Clustering implementation
-    static meanShiftClustering(pixels, bandwidth = null) {
-        // If bandwidth not provided, estimate it
-        if (bandwidth === null) {
-            const distances = [];
-            for (let i = 0; i < pixels.length; i++) {
-                for (let j = i + 1; j < pixels.length; j++) {
-                    distances.push(this.distance(pixels[i], pixels[j]));
-                }
-            }
-            distances.sort((a, b) => a - b);
-            bandwidth = distances[Math.floor(distances.length * 0.1)];
-        }
+    // static meanShiftClustering(pixels, bandwidth = null) {
+    //     // If bandwidth not provided, estimate it
+    //     if (bandwidth === null) {
+    //         const distances = [];
+    //         for (let i = 0; i < pixels.length; i++) {
+    //             for (let j = i + 1; j < pixels.length; j++) {
+    //                 distances.push(this.distance(pixels[i], pixels[j]));
+    //             }
+    //         }
+    //         distances.sort((a, b) => a - b);
+    //         bandwidth = distances[Math.floor(distances.length * 0.1)];
+    //     }
 
-        const labels = new Array(pixels.length).fill(-1);
-        const clusters = [];
+    //     const labels = new Array(pixels.length).fill(-1);
+    //     const clusters = [];
 
-        pixels.forEach((pixel, index) => {
-            if (labels[index] !== -1) return; // Skip if already labeled
+    //     pixels.forEach((pixel, index) => {
+    //         if (labels[index] !== -1) return; // Skip if already labeled
 
-            let shifted = [...pixel];
-            let prevShifted;
+    //         let shifted = [...pixel];
+    //         let prevShifted;
 
-            do {
-                prevShifted = [...shifted];
+    //         do {
+    //             prevShifted = [...shifted];
                 
-                // Calculate mean shift
-                const nearPoints = pixels.filter(p => 
-                    this.distance(p, shifted) <= bandwidth
-                );
+    //             // Calculate mean shift
+    //             const nearPoints = pixels.filter(p => 
+    //                 this.distance(p, shifted) <= bandwidth
+    //             );
 
-                shifted = nearPoints.reduce((sum, point) => 
-                    sum.map((val, i) => val + point[i]), 
-                    new Array(pixel.length).fill(0)
-                ).map(val => val / nearPoints.length);
-            } while (this.distance(shifted, prevShifted) > 0.1);
+    //             shifted = nearPoints.reduce((sum, point) => 
+    //                 sum.map((val, i) => val + point[i]), 
+    //                 new Array(pixel.length).fill(0)
+    //             ).map(val => val / nearPoints.length);
+    //         } while (this.distance(shifted, prevShifted) > 0.1);
 
-            // Find or create cluster
-            let clusterIndex = clusters.findIndex(cluster => 
-                this.distance(cluster, shifted) <= bandwidth
-            );
+    //         // Find or create cluster
+    //         let clusterIndex = clusters.findIndex(cluster => 
+    //             this.distance(cluster, shifted) <= bandwidth
+    //         );
 
-            if (clusterIndex === -1) {
-                clusterIndex = clusters.length;
-                clusters.push(shifted);
-            }
+    //         if (clusterIndex === -1) {
+    //             clusterIndex = clusters.length;
+    //             clusters.push(shifted);
+    //         }
 
-            labels[index] = clusterIndex;
-        });
+    //         labels[index] = clusterIndex;
+    //     });
 
-        return { labels, centroids: clusters };
-    }
+    //     return { labels, centroids: clusters };
+    // }
 
     // Visualize clustering results
     static visualizeClustering(imageData, labels, centroids) {
