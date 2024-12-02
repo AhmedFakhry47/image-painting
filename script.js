@@ -232,13 +232,13 @@ async function processImage() {
                 imageData, kMeansLabels, kMeansCentroids
             );
 
-            // Mean Shift Clustering
-            const { labels: meanShiftLabels, centroids: meanShiftCentroids } = 
-                ClusteringUtils.meanShiftClustering(pixels);
+            // // Mean Shift Clustering
+            // const { labels: meanShiftLabels, centroids: meanShiftCentroids } = 
+            //     ClusteringUtils.meanShiftClustering(pixels);
             
-            const meanShiftImageData = ClusteringUtils.visualizeClustering(
-                imageData, meanShiftLabels, meanShiftCentroids
-            );
+            // const meanShiftImageData = ClusteringUtils.visualizeClustering(
+            //     imageData, meanShiftLabels, meanShiftCentroids
+            // );
 
             // Display clustered images
             const kMeansCanvas = document.createElement('canvas');
@@ -248,14 +248,14 @@ async function processImage() {
             kMeansCtx.putImageData(kMeansImageData, 0, 0);
             document.getElementById('kmeans-image').src = kMeansCanvas.toDataURL();
 
-            const meanShiftCanvas = document.createElement('canvas');
-            meanShiftCanvas.width = canvas.width;
-            meanShiftCanvas.height = canvas.height;
-            const meanShiftCtx = meanShiftCanvas.getContext('2d');
-            meanShiftCtx.putImageData(meanShiftImageData, 0, 0);
-            document.getElementById('meanshift-image').src = meanShiftCanvas.toDataURL();
-            console.log("Canvas Width:", canvas.width, "Canvas Height:", canvas.height);
-            console.log("ImageData Dimensions:", kMeansImageData.width, kMeansImageData.height);
+            // const meanShiftCanvas = document.createElement('canvas');
+            // meanShiftCanvas.width = canvas.width;
+            // meanShiftCanvas.height = canvas.height;
+            // const meanShiftCtx = meanShiftCanvas.getContext('2d');
+            // meanShiftCtx.putImageData(meanShiftImageData, 0, 0);
+            // document.getElementById('meanshift-image').src = meanShiftCanvas.toDataURL();
+            // console.log("Canvas Width:", canvas.width, "Canvas Height:", canvas.height);
+            // console.log("ImageData Dimensions:", kMeansImageData.width, kMeansImageData.height);
 
         };
         imgElement.src = e.target.result;
